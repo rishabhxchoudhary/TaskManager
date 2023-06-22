@@ -1,5 +1,4 @@
-"use client"
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Column from './Column';
 
 interface Task {
@@ -13,8 +12,23 @@ const KanbanBoard: React.FC = () => {
     { title: 'In Progress', tasks: [] },
     { title: 'Done', tasks: [] }
   ]);
+  
+  useEffect(() => {
+    const storedColumns = localStorage.getItem('kanbanColumns');
+    if (storedColumns) {
+      setColumns(JSON.parse(storedColumns));
+    }
+  }, []);
 
-  const handleTaskDrop = (taskId: string, sourceColumnTitle: string, targetColumnTitle: string) => {
+  useEffect(() => {
+    localStorage.setItem('kanbanColumns', JSON.stringify(columns));
+  }, [columns]);
+
+  const handleTaskDrop = (
+    taskId: string,
+    sourceColumnTitle: string,
+    targetColumnTitle: string
+  ) => {
     if (sourceColumnTitle === targetColumnTitle) return;
 
     const updatedColumns = columns.map((column) => {
@@ -22,24 +36,15 @@ const KanbanBoard: React.FC = () => {
         const tasks = column.tasks.filter((task) => task.id !== taskId);
         return { ...column, tasks };
       } else if (column.title === targetColumnTitle) {
-        const task: Task | undefined = columns.find((col) => col.title === sourceColumnTitle)?.tasks.find(
-          (task) => task.id === taskId
-        );
+        const task: Task | undefined = columns
+          .find((col) => col.title === sourceColumnTitle)
+          ?.tasks.find((task) => task.id === taskId);
         if (task) {
           const tasks = [...column.tasks, task];
           return { ...column, tasks };
         }
       }
       return column;
-    });
-
-    setColumns(updatedColumns);
-  };
-
-  const handleDeleteTask = (taskId: string) => {
-    const updatedColumns = columns.map((column) => {
-      const tasks = column.tasks.filter((task) => task.id !== taskId);
-      return { ...column, tasks };
     });
 
     setColumns(updatedColumns);
@@ -53,8 +58,7 @@ const KanbanBoard: React.FC = () => {
           title={column.title}
           tasks={column.tasks}
           onTaskDrop={handleTaskDrop}
-          onDeleteTask={handleDeleteTask}
-          setColumns = {setColumns}
+          setColumns={setColumns}
         />
       ))}
     </div>
