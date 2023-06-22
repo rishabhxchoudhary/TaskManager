@@ -54,25 +54,21 @@ const Column: React.FC<ColumnProps> = ({ title, tasks, onTaskDrop, setColumns })
   };
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, taskId: string) => {
-    console.log(title,"handleDragStart")
     e.dataTransfer.setData('taskId', taskId);
     e.dataTransfer.setData('sourceColumnTitle', title);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    console.log(title,"handleDragOver")
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
   };
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>, index: number) => {
-    console.log(title,"handleDragEnter")
     e.preventDefault();
     e.currentTarget.classList.add('border-gray-400', 'border-2', 'border-dashed');
   };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    console.log(title,"handleDragLeave")
     e.preventDefault();
     e.currentTarget.classList.remove('border-gray-400', 'border-2', 'border-dashed');
   };
@@ -117,7 +113,6 @@ const Column: React.FC<ColumnProps> = ({ title, tasks, onTaskDrop, setColumns })
   const handleDragLeaveObject = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   }
-  console.log(title, dragEnterIndex)
   return (
     <div
       className="flex flex-col justify-start items-center md:w-1/3 p-4 "
@@ -146,7 +141,7 @@ const Column: React.FC<ColumnProps> = ({ title, tasks, onTaskDrop, setColumns })
           </form>
         </div>
         <div>
-          {tasks.map((task, index) => (
+          {tasks?.map((task, index) => (
             <div
               key={task.id}
               className={`flex items-center justify-between p-4 border-b ${

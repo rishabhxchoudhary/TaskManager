@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Column from './Column';
+import { useSession } from 'next-auth/react';
 
 interface Task {
   id: string;
@@ -7,21 +8,37 @@ interface Task {
 }
 
 const KanbanBoard: React.FC = () => {
+  const {data: session} = useSession({required: true});
   const [columns, setColumns] = useState<{ title: string; tasks: Task[] }[]>([
-    { title: 'To Do', tasks: [] },
-    { title: 'In Progress', tasks: [] },
-    { title: 'Done', tasks: [] }
   ]);
   
   useEffect(() => {
-    const storedColumns = localStorage.getItem('kanbanColumns');
-    if (storedColumns) {
-      setColumns(JSON.parse(storedColumns));
-    }
-  }, []);
+    const getData = async () => {
+      const data = fetch('/api/getdata', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      const res = await data;
+      const json = await res.json();
+      setColumns(json.data);
+    };
+    getData();
+  }, [session]);
 
   useEffect(() => {
-    localStorage.setItem('kanbanColumns', JSON.stringify(columns));
+    if (columns.length === 0) return;
+    const updatedColumns =  async () => {
+      fetch('/api/updatedata', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({data: columns})
+      })
+    }
+    updatedColumns();
   }, [columns]);
 
   const handleTaskDrop = (
