@@ -17,7 +17,6 @@ interface ColumnProps {
 
 const Column: React.FC<ColumnProps> = ({ title, tasks, onTaskDrop, onDeleteTask, setColumns }) => {
   const [taskTitle, setTaskTitle] = useState('');
-  // const [tasks, setTasks] = useState<Task[]>([]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTaskTitle(e.target.value);
@@ -30,18 +29,34 @@ const Column: React.FC<ColumnProps> = ({ title, tasks, onTaskDrop, onDeleteTask,
         id: String(Date.now()),
         title: taskTitle
       };
-      setTasks([...tasks, newTask]);
       setTaskTitle('');
+      const updatedTasks = [...tasks, newTask];
+      const updatedColumns = setColumns((columns) =>
+        columns.map((column) => {
+          if (column.title === title) {
+            return { ...column, tasks: updatedTasks };
+          }
+          return column;
+        })
+      );
     }
   };
 
   const handleDeleteTask = (taskId: string) => {
-    const updatedTasks = tasks.filter(task => task.id !== taskId);
-    setTasks(updatedTasks);
+    const updatedTasks = tasks.filter((task) => task.id !== taskId);
+    const updatedColumns = setColumns((columns) =>
+      columns.map((column) => {
+        if (column.title === title) {
+          return { ...column, tasks: updatedTasks };
+        }
+        return column;
+      })
+    );
   };
 
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, taskId: string) => {
     e.dataTransfer.setData('taskId', taskId);
+    e.dataTransfer.setData('sourceColumnTitle', title);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -50,12 +65,8 @@ const Column: React.FC<ColumnProps> = ({ title, tasks, onTaskDrop, onDeleteTask,
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
     const droppedTaskId = e.dataTransfer.getData('taskId');
-    const droppedTask = tasks.find(task => task.id === droppedTaskId);
-    if (droppedTask) {
-      const updatedTasks = tasks.filter(task => task.id !== droppedTaskId);
-      updatedTasks.splice(index, 0, droppedTask);
-      setTasks(updatedTasks);
-    }
+    const sourceColumnTitle = e.dataTransfer.getData('sourceColumnTitle');
+    onTaskDrop(droppedTaskId, sourceColumnTitle, title);
   };
 
   return (
