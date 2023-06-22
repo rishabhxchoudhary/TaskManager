@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TrashIcon } from '@heroicons/react/solid';
+import { TrashIcon, PlusIcon } from '@heroicons/react/solid';
 
 interface Task {
   id: string;
@@ -69,14 +69,12 @@ const Column: React.FC<ColumnProps> = ({ title, tasks, onTaskDrop, setColumns })
     console.log(title,"handleDragEnter")
     e.preventDefault();
     e.currentTarget.classList.add('border-gray-400', 'border-2', 'border-dashed');
-    // setDragEnterIndex(index);
   };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     console.log(title,"handleDragLeave")
     e.preventDefault();
     e.currentTarget.classList.remove('border-gray-400', 'border-2', 'border-dashed');
-    // setDragEnterIndex(null);
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -122,7 +120,7 @@ const Column: React.FC<ColumnProps> = ({ title, tasks, onTaskDrop, setColumns })
   console.log(title, dragEnterIndex)
   return (
     <div
-      className="flex flex-col justify-start items-center w-1/3 p-4"
+      className="flex flex-col justify-start items-center md:w-1/3 p-4 "
       onDragEnter={(e) => handleDragEnter(e, tasks.length-1)}
       onDragLeave={handleDragLeave}
       onDragOver={handleDragOver}
@@ -138,13 +136,11 @@ const Column: React.FC<ColumnProps> = ({ title, tasks, onTaskDrop, setColumns })
                 placeholder="Enter task title"
                 value={taskTitle}
                 onChange={handleInputChange}
-                className="border-gray-300 focus:ring-blue-500 focus:border-blue-500 flex-grow p-2 rounded-md"
+                className="border-gray-300 text-gray-700  focus:ring-0 focus:ring-transparent
+                 flex-grow p-2 rounded-md"
               />
-              <button
-                type="submit"
-                className="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md"
-              >
-                Add Task
+            <button type="submit" className="ml-2 p-2 bg-blue-500 rounded-full">
+                <PlusIcon className="h-5 w-5 text-white" />
               </button>
             </div>
           </form>

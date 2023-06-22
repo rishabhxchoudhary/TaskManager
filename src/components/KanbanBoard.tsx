@@ -51,7 +51,7 @@ const KanbanBoard: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center space-x-4 p-4">
+    <div className="flex flex-col justify-center md:flex-row">
       {columns.map((column) => (
         <Column
           key={column.title}
