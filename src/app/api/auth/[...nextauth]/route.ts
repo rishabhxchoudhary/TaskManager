@@ -33,6 +33,16 @@ export const authOptions = {
             image: "",
           };
           return user;
+        } else if (
+          credentials?.username === "filecompressor" &&
+          credentials.password === "filecompressor"
+        ) {
+          const user = {
+            id: 2,
+            name: "File Compressor",
+            email: "filecompresor@gmail.com",
+          };
+          return user;
         } else return null;
       },
     }),
