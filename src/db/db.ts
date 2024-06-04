@@ -1,7 +1,7 @@
 // This file sets up a reusable connection to the MongoDB database using Mongoose.
 import mongoose, { Connection } from "mongoose";
 
-const MONGODB_URI = "mongodb+srv://root:root@cluster0.l1nm6mf.mongodb.net/";
+const MONGODB_URI = "mongodb+srv://root:root@cluster0.liodvwj.mongodb.net/";
 
 if (!MONGODB_URI) {
   throw new Error(

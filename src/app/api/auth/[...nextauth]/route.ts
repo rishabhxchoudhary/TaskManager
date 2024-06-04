@@ -47,7 +47,7 @@ export const authOptions = {
       },
     }),
   ],
-  database: "mongodb+srv://root:root@cluster0.l1nm6mf.mongodb.net/",
+  database: "mongodb+srv://root:root@cluster0.liodvwj.mongodb.net/",
   callbacks: {
     async session(session: any) {
       await connectToDatabase();
